@@ -1,0 +1,348 @@
+
+	// 개인화영역 /////////////////////////////////////////////////////////////////////////////////////////////////
+	// 개인화영역 네임스페이스 : 전역공간이 지저분해지는 걸 방지하기 위함
+	var MelonPersonal = ({
+		init: function(mode) {
+			var me = this;
+
+			//start: 20140208 수정
+			if(this._inited) { return; }
+			this._inited = true;
+
+            //start: 140423_수정
+			MelonPersonal.respond && $(document.documentElement).toggleClass('narrow-screen', me.getWinWidth() < 1280);
+            !MelonPersonal.respond && $(document.documentElement).addClass('narrow-screen');
+			//end: 140423_수정
+
+			// 로그아웃 상태에서는 아무것도 처리안함
+			if(!isMelonLogin()) { return me; }
+			// start: 131210_수정
+			if(me.isWideMode = (me.getWinWidth() > 1280)) {
+				// 1280 이상에서 펼침이 기본
+				if (getCookie('personalexpand') === 'false' || mode === false){ // 유저의 액션에 의해 접힘으로 설정됐거나 초기 접힘 설정이면
+					document.write(['<style type="text/css">',
+					/* 140529_수정 */
+					   //'#util_menu .top_right.my_fold	{right:251px;}',
+					   '#footer.my_fold			{padding-right:20px;}',
+					   '#header_wrap.my_fold	{padding-right:20px;}',
+					   '#conts_section.my_fold	{padding-right:20px;}',
+					   /* //140529_수정 */
+					   '</style>'].join(''));
+					me.isExpand = false;
+				} else {
+					me.isExpand = true;
+				}
+			} else {
+                //140429_1024이하 해상도 캐쉬처리 관련 추가
+                if (getCookie('personalexpand') != 'false'){
+                    me.isVexpand = true;
+                }
+
+				// 1280이하에서는 축소가 기본
+				me.isExpand = false;
+			}
+			// end: 131210_수정
+
+			me._calcSizeInfo();
+			return me.isWideAndExpand = me.isWideMode && me.isExpand, me;
+		},
+
+		// 사이즈 계산
+		_calcSizeInfo: function() {
+			var me = this,
+				boxHeight = 0,
+				topViewHeight = 0;
+
+			me.winHeight = me.getWinHeight();
+			if(me.isExpand) {
+				if(me.isWideMode) { // 1280이상
+					boxHeight = me.winHeight;
+				} else { // 1280이하
+					boxHeight = Math.min(800, me.winHeight - 100); // 800은 최대 크기, 100은 상단+하단 간격
+					me.boxHeight = 'height:' + (boxHeight)+'px;';
+				}
+                //140513_화면로딩순서 관련 수정
+				boxHeight -= 136; //상단에서 배너밑부분까지
+				me.topViewHeight = 'height:' + ((boxHeight) - 5)+'px;'; // 5는 구분바의 사이즈(9) / 2
+				topViewHeight = (me.boxHeight) - 5; // 5는 구분바의 사이즈(9) / 2
+				//me.bottomViewHeight = 'height:'// + (boxHeight - topViewHeight - 189)+'px;'; // 189: 180 + 9
+			}
+		},
+
+		// 로그인여부에 따른 레이아웃 마크업을 반환
+		// 반드시 _calcSizeInfo() 함수 실행이후에 호출해야함(안그러면 리사이징으로 인해서 깜밖임이 발생함)
+		// 20140208 수정 : 함수명 변경
+		printLayout: function() {
+
+			// /**/ 부분은 쿠키값으로 뿌릴 것
+			var html = '';
+			if (isMelonLogin()) {
+				var prodName;
+				if (getProdName() != ""){
+					//var prodNames = new Array();
+					//prodNames = getProdName().split(',');
+					//prodName = '<a href="http://www.melon.com/commerce/mypage/product/web/producthistory_listCurUserProdView.htm" title="'+prodNames[prodNames.length-1]+'" class="promotion">'+prodNames[prodNames.length-1]+'</a>이용중';
+					var prodNames = getProdName().replace(/,/g, "</span>, <span>");
+					prodName = '<a href="javascript:MELON.WEBSVC.POC.menu.goMyPage();" title="이용보유현황" class="promotion">'
+							 + 		'<strong><span>'+prodNames+'</span></strong>'
+							 + 		'<span class="txt">사용중</span>'
+							 + '</a>';
+				} else {
+					prodName = '보유중인 이용권이 없습니다. <a href="//www.melon.com/commerce/pamphlet/web/sale_listMainView.htm" title="이용권구매">이용권구매</a>';
+				}
+
+				var memberKey = getMemberKey()
+				var memberInfo = svcMember.displayIdByMemberKey(memberKey);
+				var memberType = svcMember.getMemberType().MEMBERTYPE;
+				var gradeInfo = svcMember.gradeInfoByMemberKey(memberKey);
+
+				var memId = '';
+				if(memberType == undefined || memberType == null){
+					memberType = '0';
+				}
+
+				if(memberInfo.DISPLAYID != undefined || memberInfo.DISPLAYID != null){
+					memId = memberInfo.DISPLAYID;
+				}
+
+				if(memId.indexOf("@") != -1 && memberType != '1'){//카카오계정이 아닌경우에만 @도메인 영역 삭제처리
+					memId = memId.split("@")[0];
+				}
+
+				var fromMPS = getCookie("MPS"); // 멜론 플레이어에서 왔는지 확인.
+				var fromMPSYn = fromMPS == null || fromMPS.indexOf("MELONPLAYER") < 0;
+				
+				var gradeImg = "";
+				var gradeName = gradeInfo.GRADE;
+				var gradeImageUrl = gradeInfo.HTTPSIMAGEURL;
+
+				if(gradeName == undefined || gradeName == null){
+					gradeName = '일반';
+				}
+				
+				try {
+					gradeImageUrl = gradeImageUrl.replace('http:','');
+
+					if(gradeName == '일반'){
+						gradeImageUrl = "";
+					}
+					
+					if(gradeImageUrl != ''){
+						gradeImg = "<span class=\"icon_grade\"><img src=\""+gradeImageUrl+"\" width=\"18\" height=\"18\" alt=\""+gradeName+"\" /></span>";
+					}
+					
+					//카카오연동확인
+					if(memberType == '1'){
+						gradeImg += '<span class="icon_grade"><img src="//cdnimg.melon.co.kr/resource/image/web/common/icon_kakao.png" width="18" height="18" alt="kakao"></span>';
+					}
+				} catch (e) {}
+
+				var locationInfo = location.host;
+				var memberPhaseDomain = 'member.melon.com';
+				var PHASE_SANDBOX = 'sandbox-';
+				var PHASE_CBT = 'cbt-';
+				var PHASE_REL = 'rel-';
+				if(locationInfo.indexOf(PHASE_SANDBOX) > -1){
+					memberPhaseDomain = PHASE_SANDBOX + memberPhaseDomain;
+				} else if(locationInfo.indexOf(PHASE_CBT) > -1){
+					memberPhaseDomain = PHASE_CBT + memberPhaseDomain;
+				} else if(locationInfo.indexOf(PHASE_REL) > -1){
+					memberPhaseDomain = PHASE_REL + memberPhaseDomain;
+				}
+				// 로그인 상태
+				html = ['<div id="id_box" class="logon">',
+					'<div class="logout">',
+						'<div id="personal_fold" class="fold" style="display:'+(MelonPersonal.isExpand?'none':'block')+' !important;">',
+							'<div class="inbox">',
+								'<div class="id_logout">',
+									'<strong class="ellipsis">',
+										'<a href="https://'+memberPhaseDomain+'/muid/web/help/myinfointro_inform.htm" class="id_area">'+gradeImg+memId+'</a>님',
+									'</strong>',
+									'<div class="info_area">',
+										'<div class="my_menu_info">',
+											'<a href="https://'+memberPhaseDomain+'/muid/web/help/myinfointro_inform.htm" class="first_child" title="내정보">내정보</a>',
+											fromMPSYn ? '<a href="javascript:MELON.WEBSVC.POC.login.gnbLogout();" title="로그아웃">로그아웃</a>' : '',
+											//facebookConnection ? '<button type="button" class="btn_icon sns_facebook d_conn" title="페이스북 연동하기"><span>페이스북 연동하기</span></button>' : '<button type="button" class="btn_icon sns_facebook d_deconn" title="페이스북 해제하기"><span class="cancel">페이스북 해제하기</span></button>',
+										'</div>',
+									'</div>',
+									'<button class="btn_icon my_expn d_expand" type="button" title="마이영역 자세히 보기"><span class="odd_span">마이영역 자세히 보기</span></button>',
+								'</div>',
+							'</div>',
+							'<div class="outbox">',
+								'<strong class="ellipsis"><a href="https://'+memberPhaseDomain+'/muid/web/help/myinfointro_inform.htm" class="id_area">'+gradeImg+memId+'</a>님</strong>,',
+								fromMPSYn ? '<a href="javascript:MELON.WEBSVC.POC.login.gnbLogout();" title="로그아웃">로그아웃</a>' : '',
+								'<button class="btn_icon my_expn d_expand" type="button" title="마이영역 자세히 보기"><span class="odd_span">마이영역 자세히 보기</span></button>',
+							'</div>',
+						'</div>',
+						'<div id="personal_expn" class="expn" style="display:'+(MelonPersonal.isExpand?'block':'none')+' !important;'+(MelonPersonal.boxHeight)+'">',
+							'<div class="id_logout">',
+								'<div class="top_area">',
+									'<strong class="member_name">',
+										'<a href="https://'+memberPhaseDomain+'/muid/web/help/myinfointro_inform.htm" class="id_area">'+gradeImg+memId+'</a>님',
+									'</strong>',
+									'<button class="btn_icon my_simple d_collapse" type="button" title="마이영역 간단히 보기"><span class="odd_span">마이영역 간단히 보기</span></button>',
+								'</div>',
+								'<div class="info_area">',
+										'<p class="product_info">',
+											prodName + '',
+										'</p>',
+										'<div class="member_point">',
+											/*151124 수정 lyr*/
+											'<a href="javascript:melon.link.goMyCupon();" title="쿠폰 - 페이지 이동" class="first_child"><em class="label">쿠폰</em><span class="nm">'+getCouponCnt()+'</span></a><a href="javascript:melon.link.goMelonCash();" class="cash" title="캐시 - 페이지 이동"><em class="label">캐시</em><span class="nm">'+getMelonCash().replace(/(\d)(?=(?:\d{3})+$)/g, "$1,")+'</span></a><a href="javascript:melon.link.goPresentSong();" title="선물 - 페이지 이동"><em class="label">선물</em><span class="nm">'+getMemberGiftCnt()+'</span></a>',/* // MELONUIT-568 190625 */
+											/*151124  수정 lyr*/	
+										'</div>',
+										'<div class="my_menu_info clfix">',
+											'<a href="https://'+memberPhaseDomain+'/muid/web/help/myinfointro_inform.htm" class="first_child" title="내정보" id="d_myinfo_btn">내정보</a>',
+											//facebookConnection ? '<button type="button" class="btn_icon sns_facebook d_conn" title="페이스북 연동하기"><span>페이스북 연동하기</span></button>' : '<button type="button" class="btn_icon sns_facebook d_deconn" title="페이스북 해제하기"><span class="cancel">페이스북 해제하기</span></button>',
+											fromMPSYn ? '<a href="javascript:MELON.WEBSVC.POC.login.gnbLogout();" title="로그아웃" class="btn_logout">로그아웃</a>' : '',
+										'</div>',
+								'</div>',
+								'<div id="personal_news" class="news_box" style="'+(MelonPersonal.topViewHeight)+'">',
+									'<h2><a href="javascript:melon.menu.goFeed();" class="all_view mlog" data="LOG_PRT_CODE=4&MENU_PRT_CODE=4&MENU_ID_LV1=71030102&CLICK_AREA_PRT_CODE=&ACTION_AF_CLICK=V2">새로운 피드</a></h2>',
+									'<div class="list_view load"> ',
+										'<div class="list_wrap d_scrollview">',
+											'<ul class="d_scrollcontent"></ul>',
+										'</div>',
+										'<div class="loading" style="margin-top:-35px;top:50%;">',
+											'<melon:img src="/resource/image/web/common/img_loading_news_box.gif" width="40" height="40" alt="로딩 이미지" />',
+											'<p>잠시 기다려 주세요</p>',
+										'</div>',
+										'<div class="scroll_wrap" style="display:none;">',
+											'<div class="scroll d_scrollbar">',
+												'<div class="body" style="height:10px;"></div>',
+												'<div class="bottom"></div>',
+											'</div>',
+										'</div>',
+									'</div>',
+								'</div>',
+								'<div id="personal_splitbar" class="ctrl_bar"><span class="none">소식함 영역 조절바</span></div>',
+								'<div id="personal_friend" class="active_friend" style="'+(MelonPersonal.bottomViewHeight)+'">',
+									'<h2><a href="javascript:melon.menu.goMyMusicMyFriend();" class="all_view">활동중인 친구</a></h2>',
+									'<div class="list_view">',
+										'<div class="list_wrap">',
+											'<ul>',
+											'</ul>',
+										'</div>',
+									'</div>',
+								'</div>',
+							'</div>',
+							'<div class="line_bottom"></div>',
+						'</div>',
+					'</div>',
+				'</div>'].join('');
+				
+				//20140208 수정: 조합된 html태그를 반환하는 형식에서 직접 write하는 방식으로 변경
+				document.write(html);
+
+				// 페이스북 계정연동 서비스 종료로 해당영역 DP안함
+				/*
+				var facebookConnectYn = getFacebookConnectYn();
+				
+				// Cookie에 페이스북 연동 관련 값이 있으면 아래 ajax는 호출하지 않는다.
+				if(facebookConnectYn == "" || typeof facebookConnectYn == "undefined"){
+					try {
+						$.ajax({
+							url: "//www.melon.com/gnb/check_connectFacebook.json",
+							type : 'GET',
+							dataType: 'jsonp',
+							jsonp: 'jscallback',
+						}).done(function(json) {
+							facebookConnectYn = json.facebookConnectYn;
+							
+							var facebookConnection = "Y" != facebookConnectYn;
+							printFacebookBtn(facebookConnection);
+						}).fail(function() {
+							printFacebookBtn(true);
+						});
+					} catch(e){
+						printFacebookBtn(true);
+					}
+				} else {
+					var facebookConnection = "Y" != facebookConnectYn;
+					printFacebookBtn(facebookConnection);
+				}
+				*/
+			} else {
+					html = ['<div id="id_box" class="logoff">',
+							'<div class="login" id="gnbLoginDiv">',
+								'<div class="inbox">',
+									'<fieldset>',
+										'<legend>로그인 영역</legend>',
+										'<div class="wrap_mem">',
+											'<a href="javascript:MELON.WEBSVC.POC.link.goJoin();" title="회원가입 - 페이지 이동">회원가입</a><a href="javascript:MELON.WEBSVC.POC.login.menuLogin();" title="로그인 - 페이지 이동" class="btn_login">로그인</a>',
+										'</div>',
+									'</fieldset>',
+								'</div>',
+								'<div class="expn">',
+									'<div class="id_login" style="display: block;">',
+										/* MELONUIT-236 */
+										'<div class="button_login">',
+											'<div class="top_area">',
+												'<a href="javascript:MELON.WEBSVC.POC.link.goJoin();" title="회원가입 - 페이지 이동">회원가입</a>',
+											'</div>',
+											'<button type="button" class="btn_login" onclick="MELON.WEBSVC.POC.login.menuLogin();"><span class="odd_span">로그인</span></button>',
+										'</div>',
+										/* //MELONUIT-236 */
+										'<ul class="quick_link type02">',
+											'<li><a href="//www.melon.com/commerce/pamphlet/web/sale_listMainView.htm" title="멜론 이용권구매" class="m01">멜론 이용권구매</a></li>',
+											'<li><a href="javascript:melon.menu.goMyPageAddCash();" title="멜론캐시 충전" class="m02">멜론캐시 충전</a></li>',/* // MELONUIT-568 190625 */
+											'<li><a href="//www.melon.com/customer/serviceintro/index.htm" title="멜론 플레이어" class="m03">멜론 플레이어</a></li>',
+											'<li><a href="//faqs2.melon.com/customer/index.htm" title="고객지원" class="m04">고객지원</a></li>',
+										'</ul>',
+										'<div class="ban">',
+											'<a href="" title="땡큐 프로젝트 시즌2"><melon:img src="/resource/image/web/sample/@banner_198_81_02.png" width="198" height="81" alt="땡큐 프로젝트 시즌2" /></a><a href="" class="mt3" title="Healing price 시즌2 3개월 가격 파격 할인"><melon:img src="/resource/image/web/sample/@banner_198_81_03.png" width="198" height="81" alt="Healing price 시즌2 3개월 가격 파격 할인" /></a>',
+										'</div>',
+									'</div>',
+								'</div>',
+							'</div>',
+						'</div>'].join('');					
+				//20140208 수정: 조합된 html태그를 반환하는 형식에서 직접 write하는 방식으로 변경
+				document.write(html);				
+			}
+		},
+				
+		// 윈도우 내부의 실제 크기
+		getWinWidth: function() {
+			var w = 0;
+			if (self.innerWidth) {
+				w = self.innerWidth;
+			} else if (document.documentElement && document.documentElement.clientHeight) {
+				w = document.documentElement.clientWidth;
+			} else if (document.body) {
+				w = document.body.clientWidth;
+			}
+			return w;
+		},
+
+		// 윈도우 내부의 실제 크기
+		getWinHeight: function() {
+			var h = 0;
+			if (self.innerHeight) {
+				h = self.innerHeight;
+			} else if (document.documentElement && document.documentElement.clientHeight) {
+				h = document.documentElement.clientHeight;
+			} else if (document.body) {
+				h = document.body.clientHeight;
+			}
+			return h;
+		},
+		
+		// 개인화영역을 표시하는 부분이랑 PersonalArea모듈을 실행하는 곳에서,
+		// 매번 width와 쿠키를 검사해서 분기하면 비효율적이고 해서, 글로벌변수에 넣어놓고 이값을 기반으로 처리함
+		isAutoExpand: true,					// 140331_수정 자동 확장 여부
+		isExpand: getCookie('personalexpand'),				//140331_수정 Personal 영역 확장 여부
+		isWideMode: false,				// 1280 이상
+		isWideAndExpand: false,		// 1280이상 & 펼침모드
+		boxHeight: '',						// 개인화영역 height
+		topViewHeight:'',					// 새로운 소식 height
+		bottomViewHeight:'',				// 활동중인 친구 height
+		topBanner:false,					//상단 배너 존재여부 140116추가
+        respond : true             //반응형 사용여부 140331추가
+	});
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// 페이스북 연결 여부 그리기 - 페이스북 쿠키적용을 위해 개발추가
+	function  printFacebookBtn(facebookConnection) {
+		var btnHtml = facebookConnection ? '<button type="button" class="btn_icon sns_facebook d_conn" title="페이스북 연동하기"><span>페이스북 연동하기</span></button>' : '<button type="button" class="btn_icon sns_facebook d_deconn" title="페이스북 해제하기"><span class="cancel">페이스북 해제하기</span></button>';
+		$('#d_myinfo_btn').after(btnHtml);
+	}
