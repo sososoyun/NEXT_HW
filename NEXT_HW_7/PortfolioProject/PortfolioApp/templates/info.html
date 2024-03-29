@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'info.css' %}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+ 
+
+    <div class="topbox">
+        <a class="h1", href="{% url 'info' %}">INFO</a>
+        <a class="h1"href="{% url 'project' %}">PROJECT</a>
+        <a class="h1">SKILLS</a>
+    </div>
+    <div class="middle">
+        <div class="img">
+            <img src="{% static 'KakaoTalk_20240330_004713178.jpg' %}", width="300px"/>
+        </div>
+        <div class="write">
+            <div class="yeah">"도전, 그리고 또 도전!"</div>
+            <h4>"오직 도전을 통해 자신이 무엇을 할 수 있는지 알 수 있다”</br>라는 말처럼 나 자신을 알아가기 위해 열심히 도전 중입니다😊</h4>
+        </div>
+    </div>
+    <div class="who">
+        <div class="h33"><h4><strong>김소윤ㅣ010 - 9012 - 2943ㅣarl700@naver.comㅣ@ccow_cow</strong></h4></div>
+       
+
+</body>
+</html>

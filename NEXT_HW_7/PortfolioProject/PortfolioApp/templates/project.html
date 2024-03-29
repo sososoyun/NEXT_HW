@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'project.css' %}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="topbox">
+        <a class="h1", href="{% url 'info' %}">INFO</a>
+        <a class="h1"href="{% url 'project' %}">PROJECT</a>
+        <a class="h1">SKILLS</a>
+    </div>
+    <div class="what">
+        <h4>개발세션 과제</h4>
+    <div class="session">
+        <img class="h2", src="{% static 'KakaoTalk_20240308_022948510.png' %}", width="200px"/>
+        <img class="h2", src="{% static 'KakaoTalk_20240325_004708939.png' %}", width="230px" />
+    </div>
+</body>
+</html>

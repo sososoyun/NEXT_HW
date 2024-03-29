@@ -1,0 +1,55 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* 가로 스크롤 제거 */
+    background-image: url('v960-ning-30.jpg');
+}
+.topbox {
+    display: flex;
+    justify-content: center;
+}
+.middle {
+    display: flex;
+    align-items: center;
+    padding-top: 75px;
+}
+.write {
+    text-align: center;
+    position: relative;
+    left: 500px;
+    font-family: 'Ownglyph_Dailyokja-Rg';
+    font-size: 20px;
+}
+.h1 {
+    padding: 50px;
+}
+.who {
+    padding-left: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 20px;
+}
+.img {
+    position: relative;
+    left: 300px;
+}
+.yeah {
+    color: blue;
+    font-size: 50px;
+    font-family: 'WAGURITTF';
+}
+@font-face {
+    font-family: 'WAGURITTF';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403@1.0/WAGURITTF.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Ownglyph_Dailyokja-Rg';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403@1.0/Ownglyph_Dailyokja-Rg.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
