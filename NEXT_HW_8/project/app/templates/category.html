@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'category.css' %}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2 class="hobby">{ {{category}} 게시판 }</h2>
+    <img src="https://mblogthumb-phinf.pstatic.net/MjAxOTAyMTVfMjM3/MDAxNTUwMjQyMDE2MDk2.kaOIO3HIkg_aCtXuBdUkff6wlTE-0-gfCiWYaRANNhEg.p0r5jiNJwX_RbUoLjeB7zcrceRjIPcwEKgr7vdo6aogg.JPEG.rud6483/IMG_8060.JPG?type=w800", width=350px >
+    
+    <h3 class='list'>{{article.category}}</h3>
+    <ul>
+        {% for article in articles %}
+        <li>
+            <h4><a href="{% url 'detail' article.id %}">{{ article.title }}</a></h4>
+        </li>
+        {% empty %}
+        <li>아직 작성전!</li>
+        {% endfor %}
+    </ul>
+    </br><button type="submit"><a href="{% url 'list' %}">홈으로 돌아가기</a></button>
+</body>
+</html>

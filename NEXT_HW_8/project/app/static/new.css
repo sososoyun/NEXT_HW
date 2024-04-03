@@ -1,0 +1,56 @@
+html {
+    background-color: rgb(126, 135, 129);
+    color: rgb(255, 255, 255);
+    border: 5px solid white;
+    padding: 20px;
+    margin: 10px;
+    text-align: center;
+    
+}
+
+.name{
+    font-family: 'KCC-Hanbit';
+    
+    text-align: center;
+}
+@font-face {
+    font-family: 'BagelFatOne-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_JAMO@1.0/BagelFatOne-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Ownglyph_meetme-Rg';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_1@1.0/Ownglyph_meetme-Rg.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'KCC-Hanbit';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403-2@1.0/KCC-Hanbit.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Ownglyph_Dailyokja-Rg';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403@1.0/Ownglyph_Dailyokja-Rg.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+.list{
+    font-family: 'Ownglyph_Dailyokja-Rg';
+}
+a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 링크의 색을 부모 요소로부터 상속 */
+}
+
+a:visited,
+a:hover,
+a:focus {
+    color: inherit; /* 방문한 링크, 호버, 포커스 시에도 링크의 색을 부모 요소로부터 상속하여 변화 없음 */
+}
+
+.hobby {
+    font-family: 'KCC-Hanbit';
+}

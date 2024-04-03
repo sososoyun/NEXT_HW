@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'new.css' %}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2 class="hobby">{ 글쓰기 페이지 }</h2>
+    <form action="/new" method="post">
+        {% csrf_token %}
+        <select name="category">
+            <option value="">카테고리</option>
+            {% for category in categories %}
+            <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+
+        <div>
+        </br><div>글제목</div>
+            <input type="text" name="title" />
+        </div>
+        <div>
+        </br><div>글 내용</div>
+         <textarea name="content" cols="30" rows="10"></textarea>
+        </div>
+     <button type="submit">작성 완료</button>
+    </form>
+</body>
+</html>
