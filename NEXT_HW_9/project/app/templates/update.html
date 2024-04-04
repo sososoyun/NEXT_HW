@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'update.css' %}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post">
+    {% csrf_token %}
+    <div>
+        <label for ="title" class='dd'>[ 제목 ]</label>
+    </br></br><input type="text" name="title" id="title" value="{{post.title}}">
+
+       
+    </div>
+    </br><div>
+        <label for="deadline", class='dd'>[ 마감 기한 ]</label>
+        </br></br><input type="datetime-local" name="deadline" id="deadline" value="{{post.deadline}}">
+
+    </div>
+   </br><div>
+        <label for="content" class='dd'>[ 내용 ]</label>
+        </br></br><textarea name="content" id="content" cols="30" rows="10" >{{post.content}}</textarea>
+    </div>
+    </br><button type="submit">수정하기</button>
+   </form>
+</body>
+</html>

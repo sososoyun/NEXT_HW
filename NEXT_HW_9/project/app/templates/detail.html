@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'detail.css' %}" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <div>
+            <h2 class="dd">[ 제목 ]</h2>
+            <p>{{post.title}}</p>
+        </div>
+        <div>
+            <h2 class="dd">[ 마감 기한 ]</h2>
+            <p>{{post.deadline}}</p>
+        </div>
+        <div>
+            <h2 class="dd">[ 내용 ]</h2>
+            <p>{{post.content}}</p>
+        </div>
+        <button type="submit"><a href="{% url 'home' %}">홈으로</a></button>
+        <button type="submit"><a href="{% url 'update' post.pk %}">수정하기</a></button>
+        <button type="submit"><a href="{% url 'delete' post.pk %}">삭제하기</a></button>
+    </body>
+</html>

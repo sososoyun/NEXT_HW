@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 class='go'>To - Do - List</h1>
+    <img src='https://mblogthumb-phinf.pstatic.net/MjAxOTAyMTVfNDMg/MDAxNTUwMjQyMDE0MzQ1.CU7Jmml3gVn4js3fv6GaTo5ZtucI8ShFjVdeIDVIL_Yg.RMVTZqwEGkQ7XEfmsvobb1OgB_3jkb9cj7OlNvE73T0g.JPEG.rud6483/IMG_8055.JPG?type=w800' width=300px>
+    <div>
+        <ul>
+            {% for post in posts %}
+            <li>
+                <a href="{% url 'detail' post.pk %}" class='ss'>{{post.title}}</a>
+                
+                {% if post.deadline %}
+                <span>{{ post.deadline }} 까지</span> 
+                <span>({{ post.deadline|timeuntil }} left)</span>
+                {% endif %}
+                
+            
+            
+            
+            
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <button type='submit'><a href="{% url 'new' %}">할 일 추가하기</a></button>
+</body>
+</html>
