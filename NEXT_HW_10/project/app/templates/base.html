@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% block css %} {% endblock css %}
+</head>
+<body>
+    <div class="title">{% block title %} {% endblock title %}</div>
+   <div class="container">{% block content %} {% endblock content %}</div>
+
+    <footer clas="oh">
+    </br><div class="all">
+        <div class='contact'>
+            <h3 class='tit'>contact</h3>
+            <h5 class='grey'>Phone : 010 - 9012 - 2943</br> Address : 서울특별시 어딘가
+            </br>Email : arl700@naver.com
+            </br>Instagram : @ccow_cow</h5>
+        </div>
+
+        <div class='what'>
+            <h4 class='tit'>소윤이의 블로그</h4>
+            <h5 class='grey'>이 블로그는 코딩 공부를 하기 위해 2024년 4월 1일에 만들었습니다.</h5>
+        </div>
+     </div>
+
+    </footer>
+</body>
+</html>

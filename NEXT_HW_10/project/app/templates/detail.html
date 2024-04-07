@@ -1,0 +1,66 @@
+<!-- detail.html -->
+
+{% extends 'base.html' %}
+
+{% block css %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'detail.css' %}"/>
+{% endblock %} 
+
+{% block title %}
+    <h2 class="hobby">{ 상세 페이지 }</h2>
+    <div class="mini">{{ article.created_at }}</div>
+    <div>
+        <h3 class="go">글 제목</h3>
+        <div>{{ article.title }}</div>
+    </div>
+    <div>
+        <h3 class="go">글 내용</h3>
+        <div>{{ article.content }}</div>
+    </div>
+</br><h3 class='go'>댓글</h3>
+<form method="POST">
+        {% csrf_token %}
+        <input type="text" name="content" placeholder="댓글을 입력해주세요" />
+        <button type="submit">작성하기</button>
+    </form>
+
+    
+           <ul>
+        {% for comment in article.comments.all %}
+            <li>
+                {{ comment.content }}
+                <a href="{% url 'delete-comment' article_id=article.id comment_pk=comment.pk %}">삭제</a>
+             
+               {% if comment.replies.all %}
+                    <ul>
+                        {% for reply in comment.replies.all %}
+                            <li>
+                                ㄴ>{{ reply.content }}
+                                <a href="{% url 'delete-comment' article_id=article.id comment_pk=reply.pk %}">삭제</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                
+                <form method="POST" action="{% url 'reply-comment' article_id=article.id parent_comment_pk=comment.id %}">
+    {% csrf_token %}
+    <input type="text" name="content" placeholder="대댓글을 입력해주세요" />
+    <button type="submit">답글 작성</button>
+</form>
+            </br>
+             
+                
+            </li>
+        {% endfor %}
+    </ul>
+
+
+
+
+    <div>
+        <button type="button"><a href="{% url 'list' %}">홈으로 돌아가기</a></button>
+    </div>
+{% endblock %}
+
+{% block content %}{% endblock %}
