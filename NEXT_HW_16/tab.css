@@ -1,0 +1,58 @@
+.buttons {
+    display: flex;
+ justify-content: space-around;
+}
+.button {
+    padding: 10px 45px;
+    background-color: #f0f0f0;
+    border: black ;
+}
+
+.button:hover {
+    background-color: #ccc;
+}
+
+.button.active {
+    background-color: #ccc;
+}
+
+.contents {
+    padding: 10px;
+    justify-content: center;
+}
+
+.content {
+    display: none;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+.content.active {
+    display: block;
+    height: 300px;
+    
+}
+.all{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    height: 400px;
+}
+
+
+#tab1.active {
+    background-color: #FF5733; 
+}
+
+#tab2.active {
+    background-color: #FFC300; 
+}
+
+#tab3.active {
+    background-color: #4CAF50; 
+}
+
+#tab4.active {
+    background-color: #3498DB; 
+}
