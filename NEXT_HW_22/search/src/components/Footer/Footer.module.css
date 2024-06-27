@@ -1,0 +1,9 @@
+footer {
+    background-color: #ffffff;
+    padding: 10px 20px;
+    text-align: center; /* 추가 */
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin: 20px;
+    
+}
