@@ -1,0 +1,32 @@
+@server = http://localhost:3000
+
+# Get all books
+GET {{server}}/book
+
+### Create a new book
+POST {{server}}/book
+Content-Type: application/json
+
+{
+    "title": "New Book Title",
+    "writer": "Author Name",
+    "date": "2023-10-28",
+    "isAvailable": true
+}
+
+### Get a specific book by ID
+GET {{server}}/book/1
+
+### Delete a specific book by ID
+DELETE {{server}}/book/3
+
+### Update a specific book by ID
+PUT {{server}}/book/1
+Content-Type: application/json
+
+{
+    "title": "The One Thing",
+    "writer": "게리 켈러",
+    "date": "2023-02-25",
+    "isAvailable": false
+}
